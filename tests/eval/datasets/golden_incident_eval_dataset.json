@@ -1,0 +1,31 @@
+{
+  "eval_set_id": "sre_incident_response_golden_suite",
+  "name": "Enterprise SRE Incident Response Golden Evaluation Dataset",
+  "description": "Golden evaluation benchmark for l200-agent covering telemetry triage, runbook search, HITL remediation, and PII redaction.",
+  "eval_cases": [
+    {
+      "eval_id": "checkout_canary_5xx_spike",
+      "conversation": [
+        {
+          "invocation_id": "inv-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "We are seeing high 5xx errors on checkout-service in prod. Query telemetry metrics and find the matching SRE runbook."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Telemetry for `checkout-service` in `prod` confirms a critical anomaly: HTTP 5xx error rate is at 14.8% (SLO < 1.0%), p99 latency is 3420ms, and CPU utilization is saturated at 92.4% following deployment `v2.14.0-canary`. Runbook `RB-101` applies."
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ]
+    }
+  ]
+}

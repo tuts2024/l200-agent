@@ -1,0 +1,14 @@
+name: "l200-agent"
+acli_version: "1.4.2"
+agent_directory: "app"
+region: "us-central1"
+base_template: "adk"
+generated_at: "2026-09-30T18:22:46.138376+00:00"
+language: "python"
+create_params:
+  deployment_target: "cloud_run"
+  session_type: "agent_platform_sessions"
+  cicd_runner: "github_actions"
+  is_a2a: true
+  agent_gateway: False
+  agent_guidance_filename: "GEMINI.md"

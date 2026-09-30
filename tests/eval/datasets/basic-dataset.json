@@ -1,0 +1,95 @@
+{
+  "eval_set_id": "sre_incident_response_golden_suite",
+  "name": "Enterprise SRE Incident Response Golden Evaluation Dataset",
+  "description": "Evaluates golden-signal telemetry triage, runbook retrieval, guided error recovery, PII scrubbing, and Human-in-the-Loop remediation safety.",
+  "eval_cases": [
+    {
+      "eval_id": "checkout_canary_5xx_spike",
+      "conversation": [
+        {
+          "invocation_id": "inv-001",
+          "user_content": {
+            "parts": [
+              {
+                "text": "We are seeing high 5xx errors on checkout-service in prod. Query telemetry metrics and find the matching SRE runbook."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Telemetry for `checkout-service` in `prod` confirms a critical anomaly: HTTP 5xx error rate is at 14.8% (SLO < 1.0%), p99 latency is 3420ms, and CPU utilization is saturated at 92.4% following deployment `v2.14.0-canary`. Runbook `RB-101` (Canary Deployment Regression & High 5xx Error Rate on Checkout) applies. Recommended mitigation: open a SEV-1 incident ticket and request human approval to roll back `v2.14.0-canary` to `v2.13.8` or scale replicas."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "call-telemetry-1",
+                "name": "query_service_telemetry_metrics",
+                "args": {
+                  "service_name": "checkout-service",
+                  "environment": "prod",
+                  "lookback_minutes": 30
+                }
+              },
+              {
+                "id": "call-runbook-1",
+                "name": "search_incident_runbooks",
+                "args": {
+                  "symptom_query": "checkout-service 5xx canary latency"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "payment_gateway_memory_saturation",
+      "conversation": [
+        {
+          "invocation_id": "inv-002",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Check telemetry for payment-gateway in prod and identify the applicable runbook for 504 timeouts."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "`payment-gateway` exhibits 94.0% memory utilization and a 6.2% HTTP 5xx/504 error rate on version `v1.9.3`. Runbook `RB-102` (Payment Gateway Memory Saturation & Connection Pool Exhaustion) recommends opening an incident ticket and executing a rolling pod restart (`restart_pods`) with Human-in-the-Loop confirmation."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": "call-telemetry-2",
+                "name": "query_service_telemetry_metrics",
+                "args": {
+                  "service_name": "payment-gateway",
+                  "environment": "prod",
+                  "lookback_minutes": 30
+                }
+              },
+              {
+                "id": "call-runbook-2",
+                "name": "search_incident_runbooks",
+                "args": {
+                  "symptom_query": "payment-gateway memory 504 timeout"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
